@@ -17,9 +17,9 @@ module Goliath
         include Goliath::Rack::AsyncMiddleware
 
         def post_process(env, status, headers, body)
-          if (force_status  = env.params['_status'])  then  status  = force_status.to_i ; end
-          if (force_headers = env.params['_headers']) then  headers = force_headers     ; end
-          if (force_body    = env.params['_body'])    then  body    = force_body        ; end
+          if (force_status  = env[:force_status])  then  status  = force_status.to_i ; end
+          if (force_headers = env[:force_headers]) then  headers = force_headers     ; end
+          if (force_body    = env[:force_body])    then  body    = force_body        ; end
           [status, headers, body]
         end
 

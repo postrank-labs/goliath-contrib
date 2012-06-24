@@ -20,14 +20,14 @@ module Goliath
         include Goliath::Rack::AsyncMiddleware
 
         def post_process(env, status, headers, body)
-          delay    = env.params['_delay'].to_f
-          randelay = env.params['_randelay'].to_f
+          delay    = env[:force_delay].to_f
+          randelay = env[:force_randelay].to_f
           #
           if (delay > 0) || (randelay > 0)
             be_sleepy(delay, randelay)
             actual = (Time.now.to_f - env[:start_time])
             headers.merge!( 'X-Resp-Delay' => delay.to_s, 'X-Resp-Randelay' => randelay.to_s, 'X-Resp-Actual' => actual.to_s )
-            body.merge!( :_delay_ms => delay, :randelay_ms => randelay, :_actual_ms => actual )
+            body.merge!( :_delay_ms => delay, :_randelay_ms => randelay, :_actual_ms => actual )
           end
           [status, headers, body]
         end
