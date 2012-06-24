@@ -39,9 +39,9 @@ module Goliath
           })
         headers.delete('Content-Length')
         body    = {
-          "error"   => err.class.to_s.gsub(/.*::/,""),
-          "message" => err.message,
-          "status"  => err.status_code
+          status:  err.status_code,
+          error:   err.class.to_s.gsub(/.*::/,"/"),
+          message: err.message,
         }
         [err.status_code, headers, body]
       end
