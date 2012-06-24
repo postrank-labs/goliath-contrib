@@ -48,11 +48,12 @@ class TestRig < Goliath::API
   include Goliath::Contrib::CaptureHeaders
 
   def self.set_middleware!
+    use Goliath::Rack::Heartbeat                 # respond to /status with 200, OK (monitoring, etc)
     use Goliath::Rack::Tracer                    # log trace statistics
-    use Goliath::Rack::Params                    # parse & merge query and body parameters
     use Goliath::Rack::DefaultMimeType           # cleanup accepted media types
     use Goliath::Rack::Render, 'json'            # auto-negotiate response format
     use Goliath::Contrib::Rack::HandleExceptions # turn raised errors into HTTP responses
+    use Goliath::Rack::Params                    # parse & merge query and body parameters
 
     # turn params like '_force_delay' into env vars :force_delay
     use(Goliath::Contrib::Rack::ConfigurateFromParams,
