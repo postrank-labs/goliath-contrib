@@ -4,14 +4,26 @@ module Goliath
 
       # Rescue validation errors in the app just as you do
       # in middleware
+      #
+      # Place this as early as possible in the request chain, but after the rendering.
+      #
+      # @example For JSON-encoded responses, good and bad:
+      #   class AwesomeApp < Goliath::API
+      #     use Goliath::Rack::DefaultMimeType           # cleanup accepted media types
+      #     use Goliath::Rack::Render, 'json'            # auto-negotiate response format
+      #     use Goliath::Contrib::Rack::HandleExceptions # turn raised errors into HTTP responses
+      #     use Goliath::Rack::Params                    # parse & merge query and body parameters
+      #     # ... awesomeness goes here ...
+      #   end
+      #
       class HandleExceptions
         include Goliath::Rack::AsyncMiddleware
         include Goliath::Rack::Validator
+
         def call(env)
           safely(env){ super }
         end
       end
-
     end
   end
 
@@ -40,7 +52,7 @@ module Goliath
         headers.delete('Content-Length')
         body    = {
           status:  err.status_code,
-          error:   err.class.to_s.gsub(/.*::/,"/"),
+          error:   err.class.to_s.gsub(/.*::/,""),
           message: err.message,
         }
         [err.status_code, headers, body]

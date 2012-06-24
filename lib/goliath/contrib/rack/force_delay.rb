@@ -27,7 +27,7 @@ module Goliath
             be_sleepy(delay, randelay)
             actual = (Time.now.to_f - env[:start_time])
             headers.merge!( 'X-Resp-Delay' => delay.to_s, 'X-Resp-Randelay' => randelay.to_s, 'X-Resp-Actual' => actual.to_s )
-            body.merge!( :_delay_ms => delay, :_randelay_ms => randelay, :_actual_ms => actual )
+            body.merge!( :_delay_ms => delay, :_randelay_ms => randelay, :_actual_ms => actual, :_delay_start => env[:start_time].to_f )
           end
           [status, headers, body]
         end

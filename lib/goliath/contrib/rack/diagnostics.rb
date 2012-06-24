@@ -44,7 +44,7 @@ module Goliath
             "X-Req-Params"  => req_params.join("|"),
             "X-Req-Path"    => env[Goliath::Request::REQUEST_PATH],
             "X-Req-Headers" => req_headers.join("|"),
-            "X-Req-Method"  => env[Goliath::Request::REQUEST_METHOD]}
+            "X-Req-Method"  => env[Goliath::Request::REQUEST_METHOD] }
         end
 
         def post_process env, status, headers, body
