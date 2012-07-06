@@ -1,23 +1,52 @@
 # -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
+require 'goliath/contrib/version'
 
-require File.expand_path('../lib/goliath/contrib', __FILE__)
+Gem::Specification.new do |s|
+  s.name        = "goliath-contrib"
+  s.version     = Goliath::Contrib::VERSION
 
-# require './lib/goliath/contrib'
+  s.authors     = ["goliath-io"]
+  s.email       = ["goliath-io@googlegroups.com"]
 
-Gem::Specification.new do |gem|
-  gem.authors       = ["goliath-io"]
-  gem.email         = ["goliath-io@googlegroups.com"]
+  s.homepage    = "https://github.com/postrank-labs/goliath-contrib"
+  s.summary     = "Contributed Goliath middleware, plugins, and utilities"
+  s.description = s.summary
 
-  gem.homepage      = "https://github.com/postrank-labs/goliath-contrib"
-  gem.description   = "Contributed Goliath middleware, plugins, and utilities"
-  gem.summary       = gem.description
+  s.required_ruby_version = '>=1.9.2'
 
-  gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "goliath-contrib"
-  gem.require_paths = ["lib"]
-  gem.version       = Goliath::Contrib::VERSION
+  s.add_dependency 'goliath'
 
-  gem.add_dependency 'goliath'  
+  s.add_development_dependency 'rspec', '>2.0'
+
+  s.add_development_dependency 'em-http-request', '>=1.0.0'
+  s.add_development_dependency 'postrank-uri'
+
+  s.add_development_dependency 'guard'
+  s.add_development_dependency 'guard-rspec'
+  if RUBY_PLATFORM.include?('darwin')
+    s.add_development_dependency 'growl', '~> 1.0.3'
+    s.add_development_dependency 'rb-fsevent'
+  end
+
+  if RUBY_PLATFORM != 'java'
+    s.add_development_dependency 'yajl-ruby'
+    s.add_development_dependency 'bluecloth'
+    s.add_development_dependency 'bson_ext'
+  else
+    s.add_development_dependency 'json-jruby'
+    s.add_development_dependency 'maruku'
+  end
+
+  ignores = File.readlines(".gitignore").grep(/\S+/).map {|i| i.chomp }
+  dotfiles = [".gemtest", ".gitignore", ".rspec", ".yardopts"]
+
+  # s.files         = `git ls-files`.split($\)
+  # s.executables   = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  # s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  # s.require_paths = ["lib"]
+
+  s.files = Dir["**/*"].reject {|f| File.directory?(f) || ignores.any? {|i| File.fnmatch(i, f) } } + dotfiles
+  s.test_files = s.files.grep(/^spec\//)
+  s.require_paths = ['lib']
 end
