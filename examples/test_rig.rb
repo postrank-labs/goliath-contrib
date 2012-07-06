@@ -12,7 +12,16 @@ require 'goliath/contrib/rack/force_timeout'
 require 'goliath/contrib/rack/handle_exceptions'
 
 #
-# A test endpoint allowing fault injection, variable delay, or a response forced by the client.
+# A test endpoint allowing fault injection, variable delay, or a response forced
+# by the client.  Besides being a nice demo of those middlewares, it's a useful
+# test dummy for seeing how your SOA apps handle downstream failures.
+#
+# Launch with
+#
+#     bundle exec ./examples/test_rig.rb       -s -p 9000 -e development &
+#
+# If using it as a test rig, launch with `-e production`. The test rig acts on
+# the following URL parameters:
 #
 # * `_force_timeout`                    -- raise an error if response takes longer than given time
 # * `_force_delay`                      -- delay the given length of time before responding
@@ -20,27 +29,27 @@ require 'goliath/contrib/rack/handle_exceptions'
 # * `_force_fail`/`_force_fail_after`   -- raise an error of the given type (eg `_force_fail_pre=400` causes a BadRequestError)
 # * `_force_status`, `_force_headers`, or `_force_body' --  replace the given component directly.
 #
-# @example delay for 2 seconds
+# @example delay for 2 seconds:
 #   curl -v 'http://127.0.0.1:9000/?_force_delay=2'
-#   => {"_delay_ms":2.0,"_randelay_ms":0.0,"_actual_ms":2.006265640258789}
+#   => Headers: X-Resp-Delay: 2.0 / X-Resp-Randelay: 0.0 / X-Resp-Actual: 2.003681182861328
 #
-# @example drop connection
+# @example drop connection:
 #   curl -v 'http://127.0.0.1:9000/?_force_drop=true'
 #
-# @example delay for 2 seconds, then drop the connection
+# @example delay for 2 seconds, then drop the connection:
 #   curl -v 'http://127.0.0.1:9000/?_force_delay=2&_force_drop_after=true'
 #
-# @example force timeout: first call is 200 OK, second will error with 408 RequestTimeoutError
+# @example force timeout; first call is 200 OK, second will error with 408 RequestTimeoutError:
 #   curl -v 'http://127.0.0.1:9000/?_force_timeout=1.0&_force_delay=0.5'
-#   => {"_delay_ms":0.5,"_randelay_ms":0.0,"_actual_ms":0.53464674949646}
+#   => Headers: X-Resp-Delay: 0.5 / X-Resp-Randelay: 0.0 / X-Resp-Actual: 0.513401985168457 / X-Resp-Timeout: 1.0
 #   curl -v 'http://127.0.0.1:9000/?_force_timeout=1.0&_force_delay=2.0'
 #   => {"status":408,"error":"RequestTimeoutError","message":"Request exceeded 1.0 seconds"}
 #
-# @example simulate a 503
+# @example simulate a 503:
 #   curl -v 'http://127.0.0.1:9000/?_force_fault=503'
 #   => {"status":503,"error":"ServiceUnavailableError","message":"Injected middleware fault 503"}
 #
-# @example force-set headers and body
+# @example force-set headers and body:
 #   curl -v -H "Content-Type: application/json" --data-ascii '{"_force_headers":{"X-Question":"What is brown and sticky"},"_force_body":{"answer":"a stick"}}' 'http://127.0.0.1:9001/'
 #   => {"answer":"a stick"}
 #

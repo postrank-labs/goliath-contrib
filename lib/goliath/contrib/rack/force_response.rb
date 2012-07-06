@@ -2,16 +2,15 @@ module Goliath
   module Contrib
     module Rack
 
-      # if _status, _headers or _body are given, blindly substitute their
-      # value, clobbering whatever was there.
-      #
-      # If you are going to use _headers you probably need to use a JSON post body.
+      # if force_status, force_headers or force_body env attributes are present,
+      # blindly substitute the attribute's value, clobbering whatever was there.
       #
       # @example setting headers with a JSON post body
-      #   curl -v -H "Content-Type: application/json" --data-ascii '{"_headers":{"X-Question":"What is brown and sticky"},"_body":{"answer":"a stick"}}' 'http://127.0.0.1:9001/'
+      #   curl -v -H "Content-Type: application/json" --data-ascii '{"_force_headers":{"X-Question":"What is brown and sticky"},"_force_body":{"answer":"a stick"}}' 'http://127.0.0.1:9001/'
+      #   => {"answer":"a stick"}
       #
-      # @example forcing a boring response body so ab doesn't whine about a varying response body size
-      #   ab -n 10000 -c 100  'http://localhost:9000/?_delay=0.4&_randelay=0.01&_body=OK'
+      # @example force a boring response body so ab doesn't whine about a varying response body size:
+      #   ab -n 10000 -c 100  'http://localhost:9000/?_force_body=OK'
       #
       class ForceResponse
         include Goliath::Rack::AsyncMiddleware

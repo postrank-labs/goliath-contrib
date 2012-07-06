@@ -1,12 +1,18 @@
 module Goliath
 
   module Validation ; class InjectedError < Error ; end ; end
-  
+
   module Contrib
     module Rack
 
-      # if either the '_fail_pre' or '_fail_after' parameter is given, raise an error
-      # The parameter's value (as an integer) becomes the response code
+      # if either the 'force_fault' or 'force_fault_after' env attribute are
+      # given, raise an error. The attribute's value (as an integer) becomes the
+      # response code.
+      #
+      # @example simulate a 503 (see `examples/test_rig.rb`):
+      #   curl -v 'http://127.0.0.1:9000/?_force_fault=503'
+      #   => {"status":503,"error":"ServiceUnavailableError","message":"Injected middleware fault 503"}
+      #
       class ForceFault
         include Goliath::Rack::AsyncMiddleware
 
