@@ -5,6 +5,10 @@ gemspec
 
 gem 'goliath', :path => '../goliath'
 
+group :development do
+  gem 'rake'
+end
+
 # Gems for testing and coverage
 group :test do
   gem 'pry'
