@@ -1,4 +1,3 @@
-require 'goliath/contrib'
 
 # TODO: tries to start server :-)
 # require 'goliath'
