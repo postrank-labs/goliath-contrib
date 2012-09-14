@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'goliath/contrib/path_params'
 
 class RailsStyleParams < Goliath::API
   use Goliath::Contrib::PathParams, '/kittens/:name/:favourite_colour'
