@@ -20,7 +20,7 @@ module Goliath
       #     'Access-Control-Allow-Methods'  => 'POST, GET, OPTIONS',
       #     'Access-Control-Max-Age'        => '172800',
       #     'Access-Control-Expose-Headers' => 'X-Error-Message,X-Error-Detail,X-RateLimit-Requests,X-RateLimit-MaxRequests',
-      #     'Access-Control-Allow-Headers'  => 'Content-Type,X-Zibit'
+      #     'Access-Control-Allow-Headers'  => 'X-Requested-With,Content-Type,X-Zibit'
       #   }
       #
       #
